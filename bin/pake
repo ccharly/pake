@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import argparse
+import pake
+
+##
+p = argparse.ArgumentParser(description='A kind-of make (using Python) written in Python')
+p.add_argument('target', type=str, default=None, nargs='?',
+        help='The target to build')
+p.add_argument('-d,--debug', dest='debug', action='store_true', default=False,
+        help='Enable debbuging (print more information)')
+p.add_argument('-f,--file,--pakefile', dest='file', metavar='FILE', type=str, default='./Pakefile', nargs='?',
+        help='Path to your Pakefile')
+p.add_argument('-D,--directory', dest='dir', metavar='DIR', type=str, default='.', nargs='?',
+        help='Change directory before doing anything')
+
+##
+opts = p.parse_args(sys.argv[1:])
+if opts.debug:
+    pake.enable_debug = True
+if opts.dir:
+    os.chdir(opts.dir)
+
+##
+try:
+    pake.pake(opts.file, opts.target)
+except pake.PakeError as e:
+    pake.error(e.message)

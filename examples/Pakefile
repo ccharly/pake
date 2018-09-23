@@ -1,0 +1,15 @@
+## vim: set ft=python:
+
+from pake import *
+
+cxx.compiler = find_compiler('clang++')
+cxx.flags    = cxx.compiler.translate('-Wall -Werror')
+cxx.lflags   = cxx.compiler.translate('-lpthread')
+
+@rule(deps='zzz.o')
+def test(rule):
+    cxx.link('{rule.input} -o {cxx.lflags} {rule.name}', rule=rule)
+
+@rule(pattern='%.o', deps='%.cpp')
+def c2o(rule):
+    cxx.compile('{rule.input} {cxx.flags} -c -o {rule.output}', rule=rule)
