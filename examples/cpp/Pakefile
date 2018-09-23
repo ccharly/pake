@@ -8,7 +8,7 @@ cxx.lflags   = cxx.compiler.translate('-lpthread')
 
 @rule(deps='zzz.o')
 def test(rule):
-    cxx.link('{rule.input} -o {cxx.lflags} {rule.name}', rule=rule)
+    cxx.link('{rule.input} {cxx.lflags} -o {rule.name}', rule=rule)
 
 @rule(pattern='%.o', deps='%.cpp')
 def c2o(rule):
